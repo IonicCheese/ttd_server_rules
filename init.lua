@@ -10,19 +10,19 @@ rules.privs = {
 local privileges = table.concat(rules.privs, ", ")
 
 local no_interact_msg =
-    "You must agree to the rules to gain the starting privileges (" .. 
-    privileges .. ").\n" .. "Use /rules when you reconsider."
+      "You must agree to the rules to gain the starting privileges (" .. 
+      privileges .. ").\n" .. "Use /rules when you reconsider."
 
 local interact_msg =
-    "Thank you for agreeing to the rules. " ..
-    "You now have the starting privileges. (" .. privileges .. ")"
+      "Thank you for agreeing to the rules. " ..
+      "You now have the starting privileges. (" .. privileges .. ")"
 
 local function set_starting_privs(player, enabled)
     local name = player:get_player_name()
     local privs = core.get_player_privs(name)
 
     for _, target in ipairs(rules.privs) do
-        privs[target] = enabled or nil
+            privs[target] = enabled or nil
     end
 
     core.set_player_privs(name, privs)
@@ -191,6 +191,9 @@ end
 local function show_rules(player)
     local name = player:get_player_name()
     core.show_formspec(name, "rules:main", get_rules_formspec(player))
+function rules.show_rules(player)
+	local name = player:get_player_name()
+      core.show_formspec(name, "rules:main", get_rules_formspec(player))
 end
 
 core.register_on_newplayer(function(player)
@@ -198,6 +201,10 @@ core.register_on_newplayer(function(player)
     core.after(0.75, function()
         show_rules(player)
     end)
+      set_starting_privs(player, false)
+	core.after(0.75, function()
+		rules.show_rules(player)
+	end)
 end)
 
 core.register_on_joinplayer(function(player)
@@ -209,6 +216,12 @@ core.register_on_joinplayer(function(player)
             show_rules(player)
         end)
     end
+      if not rules.has_accepted_rules(player) then
+            set_starting_privs(player, false)
+            core.after(0.75, function()
+                  rules.show_rules(player)
+            end)
+      end
 end)
 
 core.register_chatcommand("rules", {
