@@ -1,27 +1,34 @@
+rules = {}
+
 local rules_path = core.get_worldpath() .. "/rules.txt"
 
+rules.privs = {
+	"interact",
+	"home",
+}
+
+local privileges = table.concat(rules.privs, ", ")
+
 local no_interact_msg =
-      "You must agree to the rules to gain the privilege 'interact'. " ..
-      "Use /rules when you reconsider."
+      "You must agree to the rules to gain the starting privileges (" .. 
+	  privileges .. ").\n" .. "Use /rules when you reconsider."
 
 local interact_msg =
       "Thank you for agreeing to the rules. " ..
-      "You now have the privilege 'interact'."
+      "You now have the starting privileges. (" .. privileges .. ")"
 
-local function set_interact_priv(player, enabled)
+local function set_starting_privs(player, enabled)
 	local name = player:get_player_name()
 	local privs = core.get_player_privs(name)
 
-	if enabled then
-		privs.interact = true
-	else
-		privs.interact = nil
+	for _, target in ipairs(rules.privs) do
+		privs[target] = enabled or nil
 	end
 
 	core.set_player_privs(name, privs)
 end
 
-local function has_accepted_rules(player)
+function rules.has_accepted_rules(player)
 	local meta = player:get_meta()
 	return meta:get_string("has_accepted_rules") == "true"
 end
@@ -29,7 +36,7 @@ end
 local function accept_rules(player)
 	local meta = player:get_meta()
 	meta:set_string("has_accepted_rules", "true")
-	set_interact_priv(player, true)
+	set_starting_privs(player, true)
 end
 
 local function load_rules()
@@ -85,7 +92,7 @@ local content_w    = form_w - pad * 2
 local content_h    = form_h - (button_h + pad * 3)
 
 local function get_rules_formspec(player)
-      local accepted = has_accepted_rules(player)
+      local accepted = rules.has_accepted_rules(player)
       local button_w = (form_w - (pad * 3)) / 2
 
       local fs = {
@@ -181,25 +188,25 @@ local function get_setrules_formspec(current_text)
 	return table.concat(fs)
 end
 
-local function show_rules(player)
+function rules.show_rules(player)
 	local name = player:get_player_name()
       core.show_formspec(name, "rules:main", get_rules_formspec(player))
 end
 
 core.register_on_newplayer(function(player)
-      set_interact_priv(player, false)
+      set_starting_privs(player, false)
 	core.after(0.75, function()
-		show_rules(player)
+		rules.show_rules(player)
 	end)
 end)
 
 core.register_on_joinplayer(function(player)
       local name = player:get_player_name()
 
-      if not has_accepted_rules(player) then
-            set_interact_priv(player, false)
+      if not rules.has_accepted_rules(player) then
+            set_starting_privs(player, false)
             core.after(0.75, function()
-                  show_rules(player)
+                  rules.show_rules(player)
             end)
       end
 end)
@@ -209,7 +216,7 @@ core.register_chatcommand("rules", {
       func = function(name)
             local player = core.get_player_by_name(name)
             if player then
-                  show_rules(player)
+                  rules.show_rules(player)
             end
       end
 })
