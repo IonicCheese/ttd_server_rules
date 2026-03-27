@@ -188,20 +188,13 @@ local function get_setrules_formspec(current_text)
     return table.concat(fs)
 end
 
-local function show_rules(player)
-    local name = player:get_player_name()
-    core.show_formspec(name, "rules:main", get_rules_formspec(player))
 function rules.show_rules(player)
 	local name = player:get_player_name()
-      core.show_formspec(name, "rules:main", get_rules_formspec(player))
+    core.show_formspec(name, "rules:main", get_rules_formspec(player))
 end
 
 core.register_on_newplayer(function(player)
-    set_interact_priv(player, false)
-    core.after(0.75, function()
-        show_rules(player)
-    end)
-      set_starting_privs(player, false)
+    set_starting_privs(player, false)
 	core.after(0.75, function()
 		rules.show_rules(player)
 	end)
@@ -210,18 +203,12 @@ end)
 core.register_on_joinplayer(function(player)
     local name = player:get_player_name()
 
-    if not has_accepted_rules(player) then
-        set_interact_priv(player, false)
+    if not rules.has_accepted_rules(player) then
+        set_starting_privs(player, false)
         core.after(0.75, function()
-            show_rules(player)
+            rules.show_rules(player)
         end)
     end
-      if not rules.has_accepted_rules(player) then
-            set_starting_privs(player, false)
-            core.after(0.75, function()
-                  rules.show_rules(player)
-            end)
-      end
 end)
 
 core.register_chatcommand("rules", {
@@ -229,7 +216,7 @@ core.register_chatcommand("rules", {
     func = function(name)
         local player = core.get_player_by_name(name)
         if player then
-            show_rules(player)
+            rules.show_rules(player)
         end
     end
 })
