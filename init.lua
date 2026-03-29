@@ -1,12 +1,14 @@
+local S = core.get_translator(core.get_current_modname())
+
 local rules_path = core.get_worldpath() .. "/rules.txt"
 
 local no_interact_msg =
-    "You must agree to the rules to gain the privilege 'interact'. " ..
-    "Use /rules when you reconsider."
+    S("You must agree to the rules to gain the privilege 'interact'.") .. " " ..
+    S("Use /rules when you reconsider.")
 
 local interact_msg =
-    "Thank you for agreeing to the rules. " ..
-    "You now have the privilege 'interact'."
+    S("Thank you for agreeing to the rules.") .. " " ..
+    S("You now have the privilege 'interact'.")
 
 local function set_interact_priv(player, enabled)
     local name = player:get_player_name()
@@ -110,18 +112,18 @@ local function get_rules_formspec(player)
     if accepted then
         local close_x = (form_w - button_w) / 2
         table.insert(fs,
-            string.format("button_exit[%.3f,%.3f;%.3f,%.3f;rules_close;Close]",
+            string.format("button_exit[%.3f,%.3f;%.3f,%.3f;rules_close;" .. S("Close") .. "]",
                 close_x, button_y, button_w, button_h
         ))
     else
         table.insert(fs, "style[rules_disagree;bgcolor=red]")
         table.insert(fs,
-            string.format("button[%.3f,%.3f;%.3f,%.3f;rules_disagree;I do not agree!]",
+            string.format("button[%.3f,%.3f;%.3f,%.3f;rules_disagree;" .. S("I do not agree!") .. "]",
                 pad, button_y, button_w, button_h
         ))
         table.insert(fs, "style[rules_agree;bgcolor=green]")
         table.insert(fs,
-            string.format("button[%.3f,%.3f;%.3f,%.3f;rules_agree;I agree!]",
+            string.format("button[%.3f,%.3f;%.3f,%.3f;rules_agree;" .. S("I agree!") .. "]",
                 (pad * 2 + button_w), button_y, button_w, button_h
         ))
     end
@@ -170,11 +172,11 @@ local function get_setrules_formspec(current_text)
 
         -- save button
         "style[save_rules;bgcolor=green]",
-        string.format("button[%.3f,%.3f;%.3f,%.3f;save_rules;Save]",
+        string.format("button[%.3f,%.3f;%.3f,%.3f;save_rules;" .. S("Save") .. "]",
                 (width - pad - button_w), pad, button_w, button_h),
 
         -- cancel button
-        string.format("button[%.3f,%.3f;%.3f,%.3f;cancel_rules;Cancel]",
+        string.format("button[%.3f,%.3f;%.3f,%.3f;cancel_rules;" .. S("Cancel") .. "]",
                 pad, pad, button_w, button_h),
     }
 
@@ -205,7 +207,7 @@ core.register_on_joinplayer(function(player)
 end)
 
 core.register_chatcommand("rules", {
-    description = "Show the server rules.",
+    description = S("Show the server rules."),
     func = function(name)
         local player = core.get_player_by_name(name)
         if player then
@@ -215,7 +217,7 @@ core.register_chatcommand("rules", {
 })
 
 core.register_chatcommand("set_rules", {
-    description = "Edit the server rules.",
+    description = S("Edit the server rules."),
     privs = { server = true },
     func = function(name)
         core.show_formspec(name, "rules:set", get_setrules_formspec(rules_text))
@@ -252,14 +254,14 @@ core.register_on_player_receive_fields(function(player, formname, fields)
         -- save button
         if fields.save_rules and fields.edit_rules_input then
             save_rules(fields.edit_rules_input)
-            core.chat_send_player(name, "Rules updated successfully.")
+            core.chat_send_player(name, S("Rules updated successfully."))
             core.close_formspec(name, "rules:set")
             return
         end
 
         -- cancel button
         if fields.cancel_rules then
-            core.chat_send_player(name, "Rules edit canceled.")
+            core.chat_send_player(name, S("Rules edit canceled."))
             core.close_formspec(name, "rules:set")
             return
         end

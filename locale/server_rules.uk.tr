@@ -1,0 +1,23 @@
+# textdomain: server_rules
+# Translated by FromKaniv
+
+Server Rules=Правила Сервера
+An improved rules interface.=Покращений інтерфейс правил.
+
+Close=Закрити
+Save=Зберегти
+Cancel=Скасувати
+
+I agree!=Я погоджуюся!
+Thank you for agreeing to the rules.=Дякую, що погодилися із правилами.
+You now have the privilege 'interact'.=Вам надано привілей «interact».
+
+I do not agree!=Я не погоджуюся!
+You must agree to the rules to gain the privilege 'interact'.=Ви маєте погодитися із правилами для отримання привілею «interact».
+Use /rules when you reconsider.=Використайте /rules, коли зміните своє рішення.
+
+Show the server rules.=Показати правила сервера.
+Edit the server rules.=Змінити правила сервера.
+
+Rules updated successfully.=Правила успішно змінені.
+Rules edit canceled.=Зміну правил скасовано.

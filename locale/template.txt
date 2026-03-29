@@ -1,0 +1,22 @@
+# textdomain: server_rules
+
+Server Rules=
+An improved rules interface.=
+
+Close=
+Save=
+Cancel=
+
+I agree!=
+Thank you for agreeing to the rules.=
+You now have the privilege 'interact'.=
+
+I do not agree!=
+You must agree to the rules to gain the privilege 'interact'.=
+Use /rules when you reconsider.=
+
+Show the server rules.=
+Edit the server rules.=
+
+Rules updated successfully.=
+Rules edit canceled.=
